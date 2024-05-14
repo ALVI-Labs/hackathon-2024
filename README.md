@@ -1,46 +1,40 @@
 # Muscle interface hackathon
 
+## Introduction
+We collected data during repetitive motor tasks. The datasets were recorded from healthy individuals and an individual with a hand amputation. To evaluate your solution, we selected data from the amputee. Three sessions were recorded, with each session lasting approximately 20-30 minutes. The data is divided into train, test, and submit sets. The train and test sets include labels, while the submit set contains only EMG signals.
 
-## Data
+## How to start.
+There're 4 notebooks in notebooks folder.
+- train baseline
+- calculate metrics
+- make submission
+- visaulize prediction
 
-### Strcuture.
+## Dataset Details
+Each individual has multiple `.npz` files corresponding to different tasks.
 
-We collected data during repetitive motor task. Datasets were recorded on healthy persons and person with hand amputation. 
-To evaluate your solution we chose on amputee person. We collected 3 sessions and did same movements. Each session is approximately 20-30 mins. 
-We separate it on train/test/submit respectively.
-train and test have labels, submit has only EMG signals. 
+The dataset contains the following components:
+- **data_myo**: Preprocessed and interpolated data from 8 electrodes, recorded at 200 fps.
+- **data_vr**: Interpolated joint quaternions.
+- **data_angles**: Joint angles extracted from `data_vr`.
+- **myo_ts**: Time series of the myo signals.
 
-Each person has N .npz files. That's data for some task.
+## Evaluation
+Evaluation will be based on the angle error, specifically the Mean Absolute Error (MAE) on downsampled angles. The data is downsampled from 200 fps to 25 fps (8x downsampling).
 
-Description of the data 
-['data_myo', 'data_vr', 'data_angles', 'myo_ts']
+## Example Submission
+Provide an example of a submission file here. See notebooks.
 
-myo consists of 8 electrodes nad were recorded with 200 fps
-data_myo is preprocess and interpolated 
-data_vr - interpolated joints quanternions 
-data_angles - angles of the joints extracted from data_vr. 
-myo_ts - time series of the myo signals.
+## Dataset Description
+We train the model to directly reduce the dimensions. 
 
-Evaluation will be in the form of angle error. 
+- **Input Size**: (8, 256)
+- **Output Size**: (20, 32)
 
-- MAE on downsamples angles.
-- 200 fps -> 25 fps so 8x downsampl. 
-- Example of submission file
+If you want to train the model on data from all individuals but test only on the amputee (Fedya), we preprocess different hands and adjust the electrode orientation for "left" hands.
 
-
-
-
-### Dataset description 
-
-We train model directrly to squeeze dimension. 
-
-Size of the input (8, 256) || Size of the output (20, 32)
-
-In case you want to train model on all people and test on fedya only.
-During dataset creation we preprocess different hands and change orientation of the electrodes for "left" hands. 
-
-datasets=['../../data/processed/dataset_v2_blocks', 
-        '../../data/processed/dataset_v1_big'],
-hand_type = ['left', 'right'],
-human_type = ['health', 'amputant'],
-test_dataset_list = ['fedya_tropin_standart_elbow_left']
+## Additional Notes
+- **Datasets**: `['../../data/processed/dataset_v2_blocks', '../../data/processed/dataset_v1_big']`
+- **Hand Type**: `['left', 'right']`
+- **Human Type**: `['healthy', 'amputee']`
+- **Test Dataset List**: `['fedya_tropin_standart_elbow_left']`
